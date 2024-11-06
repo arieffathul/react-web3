@@ -11,11 +11,13 @@ function App() {
   function Header() {
     return (
       <div>
-        <h1>Belajar React</h1>
+        <h1 className="text-red-500 font-bold underline">
+          Belajar React
+        </h1>
       </div>
     )
   }
-  function Header3(props){
+  function Header3(props) {
     return (
       <div>
         <h3>Belajar javascript hari {props.name} belajar {props.belajar}</h3>
@@ -25,9 +27,9 @@ function App() {
 
   return (
     <>
-    <Header/>
-    <Header3 name="pertama" belajar="dasar 1"/>
-    <Header3 name="kedua" belajar="react"/>
+      <Header />
+      <Header3 name="pertama" belajar="dasar 1" />
+      <Header3 name="kedua" belajar="react" />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -48,7 +50,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <Homepage/>
+      <Homepage />
     </>
   )
 }
