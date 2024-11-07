@@ -1,56 +1,27 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { fetchPokemonDetail } from "../redux/Reducer";
 
 export default function PokemonDetail() {
     const { id } = useParams();  // Get the Pokémon ID from the URL
-    const [pokemon, setPokemon] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [hasPrevious, setHasPrevious] = useState(false);
-    const [hasNext, setHasNext] = useState(false);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // const [pokemon, setPokemon] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
+    // const [hasPrevious, setHasPrevious] = useState(false);
+    // const [hasNext, setHasNext] = useState(false);
+
+    const { detail: pokemon, loading, error, hasPrevious, hasNext } = useSelector((state) => state.pokemon);
+
     useEffect(() => {
-        const fetchPokemonDetail = async () => {
-            try {
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-                if (!response.ok) throw new Error("Failed to fetch Pokémon data");
+        dispatch(fetchPokemonDetail(id));
+    }, [dispatch, id]);
 
-                const data = await response.json();
-                setPokemon(data);
-
-                // Check if the previous and next Pokémon exist
-                const prevId = parseInt(id) - 1;
-                const nextId = parseInt(id) + 1;
-
-                // Check if the previous Pokémon exists
-                try {
-                    const prevResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${prevId}`);
-                    setHasPrevious(prevResponse.ok);
-                } catch {
-                    setHasPrevious(false);
-                }
-
-                // Check if the next Pokémon exists
-                try {
-                    const nextResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${nextId}`);
-                    setHasNext(nextResponse.ok);
-                } catch {
-                    setHasNext(false);
-                }
-
-                setLoading(false);
-            } catch (error) {
-                setError(error);
-                setLoading(false);
-            }
-        };
-
-        fetchPokemonDetail();
-    }, [id]);
-
-    if (loading) return <div className="text-center text-xl">Loading...</div>;
-    if (error) return <div className="text-red-500 text-center text-xl">Error: {error.message}</div>;
 
     // Navigate to the next or previous Pokémon
     const nextPokemon = () => {
@@ -63,8 +34,11 @@ export default function PokemonDetail() {
         navigate(`/pokemon/${previousId}`);
     };
 
+    if (loading) return <div className="text-center text-xl">Loading...</div>;
+    if (error) return <div className="text-red-500 text-center text-xl">Error: {error}</div>;
+    if (!pokemon) return <div className="text-center text-xl">No Pokémon data available</div>; // Add this line for better handling
     return (
-        <div className="bg-gradient-to-b from-gray-800 to-black pb-[100px] min-h-screen flex flex-col items-center text-white font-sans">
+        <div className="bg-gradient-to-b from-gray-800 to-black md:pb-[100px] sm:pb-[150px] min-h-screen flex flex-col items-center text-white font-sans">
             <header className="text-center py-4">
                 <h1 className="text-3xl font-bold text-blue-300">Pokédex</h1>
             </header>

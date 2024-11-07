@@ -1,7 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { useContext } from 'react';
+import ThemeSwitcher from './ThemeSwitcher';
+import { Link } from 'react-router-dom';
+import LoginContext from '../context/LoginContext';
 
 export default function Navbar() {
+    const { user, isLoggedIn, logout } = useContext(LoginContext);
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -23,37 +27,34 @@ export default function Navbar() {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a href='/'>Home</a></li>
-                        {/* <li>
-                            <a>Parent</a>
-                            <ul className="p-2">
-                                <li><a>Submenu 1</a></li>
-                                <li><a>Submenu 2</a></li>
-                            </ul>
-                        </li> */}
-                        <li><a href='Pokemon'>Pokemon</a></li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/pokemon">Pokemon</Link></li>
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <Link to="/" className="btn btn-ghost text-xl">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/International_Pokémon_logo.svg"
+                        alt="Pokémon Logo"
+                        className="h-8 w-auto"
+                    />
+                </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                    <li><a href='/'>Home</a></li>
-                    {/* <li>
-                        <details>
-                            <summary>Parent</summary>
-                            <ul className="p-2">
-                                <li><a>Submenu 1</a></li>
-                                <li><a>Submenu 2</a></li>
-                            </ul>
-                        </details>
-                    </li> */}
-                    <li><a href='/pokemon'>Pokemon</a></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/pokemon">Pokemon</Link></li>
+                    <li><ThemeSwitcher /></li>
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {isLoggedIn ? (
+                    <div>
+                        <span>Welcome, trainer {user.name}!</span>
+                        <button onClick={logout} className="btn btn-ghost">Logout</button>
+                    </div>
+                ) : (
+                    <Link to="/login" className="btn">Login</Link>
+                )}
             </div>
         </div>
-    )
+    );
 }
